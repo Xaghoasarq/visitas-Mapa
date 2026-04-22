@@ -4,180 +4,36 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Mapa de Calor – Visitas en Terreno</title>
-
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-
   <style>
-    /* ── Reset & base ── */
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #0d1117;
-      color: #e6edf3;
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    /* ── Header ── */
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 16px;
-      background: #161b22;
-      border-bottom: 1px solid #30363d;
-      flex-shrink: 0;
-      gap: 10px;
-    }
-
-    header h1 {
-      font-size: 15px;
-      font-weight: 700;
-      color: #58a6ff;
-      letter-spacing: .3px;
-      white-space: nowrap;
-    }
-
-    #stats {
-      display: flex;
-      gap: 12px;
-      font-size: 11px;
-      color: #8b949e;
-    }
-
-    #stats span { white-space: nowrap; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0d1117; color: #e6edf3; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+    header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: #161b22; border-bottom: 1px solid #30363d; flex-shrink: 0; gap: 10px; }
+    header h1 { font-size: 15px; font-weight: 700; color: #58a6ff; white-space: nowrap; }
+    #stats { display: flex; gap: 12px; font-size: 11px; color: #8b949e; }
     #stats strong { color: #e6edf3; }
-
-    #btn-refresh {
-      background: #1f6feb;
-      border: none;
-      color: white;
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .2s;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+    #btn-refresh { background: #1f6feb; border: none; color: white; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
     #btn-refresh:hover { background: #388bfd; }
     #btn-refresh:disabled { background: #30363d; cursor: default; }
-
-    /* ── Map ── */
-    #map {
-      flex: 1;
-      width: 100%;
-      min-height: 0;
-    }
-
-    /* ── Loading overlay ── */
-    #loading {
-      position: fixed;
-      inset: 0;
-      background: rgba(13,17,23,.88);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      z-index: 9999;
-      
-    }
-    #loading.hidden { opacity: 0; pointer-events: none; display: none; }
-
-    .spinner {
-      width: 44px; height: 44px;
-      border: 3px solid #30363d;
-      border-top-color: #58a6ff;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+    #map { flex: 1; width: 100%; min-height: 0; }
+    #loading { position: fixed; inset: 0; background: rgba(13,17,23,.88); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; z-index: 9999; }
+    .spinner { width: 44px; height: 44px; border: 3px solid #30363d; border-top-color: #58a6ff; border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
     #loading p { font-size: 14px; color: #8b949e; }
-
-    /* ── Legend ── */
-    #legend {
-      position: absolute;
-      bottom: 28px;
-      right: 10px;
-      background: #161b22ee;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      padding: 12px 14px;
-      z-index: 1000;
-      font-size: 11.5px;
-      min-width: 155px;
-      backdrop-filter: blur(8px);
-    }
-
-    #legend h3 {
-      font-size: 11px;
-      font-weight: 700;
-      color: #8b949e;
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      margin-bottom: 8px;
-    }
-
-    .leg-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 3px 0;
-    }
-
-    .leg-dot {
-      width: 13px; height: 13px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      box-shadow: 0 0 6px currentColor;
-    }
-
-    /* ── Popup custom ── */
-    .leaflet-popup-content-wrapper {
-      background: #161b22;
-      color: #e6edf3;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.5);
-    }
+    #legend { position: absolute; bottom: 28px; right: 10px; background: #161b22ee; border: 1px solid #30363d; border-radius: 10px; padding: 12px 14px; z-index: 1000; font-size: 11.5px; min-width: 155px; backdrop-filter: blur(8px); }
+    #legend h3 { font-size: 11px; font-weight: 700; color: #8b949e; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px; }
+    .leg-row { display: flex; align-items: center; gap: 8px; padding: 3px 0; }
+    .leg-dot { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; }
+    .leaflet-popup-content-wrapper { background: #161b22; color: #e6edf3; border: 1px solid #30363d; border-radius: 10px; }
     .leaflet-popup-tip { background: #161b22; }
     .leaflet-popup-content { margin: 10px 14px; font-size: 13px; line-height: 1.6; }
     .popup-title { font-weight: 700; font-size: 14px; color: #58a6ff; margin-bottom: 4px; }
-    .popup-badge {
-      display: inline-block;
-      padding: 1px 8px;
-      border-radius: 99px;
-      font-size: 11px;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-
-    /* ── Error banner ── */
-    #error-bar {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      background: #da3633;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      font-size: 13px;
-      z-index: 9998;
-    }
+    .popup-badge { display: inline-block; padding: 1px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; margin-top: 4px; }
+    #error-bar { display: none; position: fixed; top: 0; left: 0; right: 0; background: #da3633; color: white; text-align: center; padding: 10px; font-size: 13px; z-index: 9998; }
   </style>
 </head>
 <body>
-
   <div id="error-bar"></div>
-
-  <!-- Header -->
   <header>
     <h1>📍 Visitas en Terreno</h1>
     <div id="stats">
@@ -186,201 +42,79 @@
     </div>
     <button id="btn-refresh" onclick="loadData()">↻ Actualizar</button>
   </header>
-
-  <!-- Map -->
   <div id="map"></div>
-
-  <!-- Legend -->
   <div id="legend">
     <h3>Días desde visita</h3>
-    <div class="leg-row"><div class="leg-dot" style="background:#ff4444;color:#ff4444"></div><span>Hoy / Ayer</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#ff8c00;color:#ff8c00"></div><span>2 – 3 días</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#ffd700;color:#ffd700"></div><span>4 – 7 días</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#00bfff;color:#00bfff"></div><span>8 – 14 días</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#6495ed;color:#6495ed"></div><span>Más de 14 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#ff4444"></div><span>Hoy / Ayer</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#ff8c00"></div><span>2 – 3 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#ffd700"></div><span>4 – 7 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#00bfff"></div><span>8 – 14 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#6495ed"></div><span>Más de 14 días</span></div>
   </div>
-
-  <!-- Loading overlay -->
   <div id="loading">
     <div class="spinner"></div>
     <p>Cargando visitas...</p>
   </div>
-
-  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <!-- Leaflet Heat plugin -->
   <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
-
   <script>
-  // ══════════════════════════════════════════════════════════════
-  //  ⚠️  REEMPLAZA ESTA URL CON LA DE TU GOOGLE APPS SCRIPT
-  // ══════════════════════════════════════════════════════════════
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwv0yZmaUE8KC8QJ3ZpAXe68EdXTDJFez87ARSb9VSZTOvaDwHUsfFc-xQDr7wNXT5K/exec';
-
-  // ── Configuración de colores por recencia ──────────────────────
-  const RANGOS = [
-    { maxDias:  1, color: '#ff4444', label: 'Hoy / Ayer',       glow: 'rgba(255,68,68,0.5)' },
-    { maxDias:  3, color: '#ff8c00', label: '2–3 días',          glow: 'rgba(255,140,0,0.45)' },
-    { maxDias:  7, color: '#ffd700', label: '4–7 días',          glow: 'rgba(255,215,0,0.4)' },
-    { maxDias: 14, color: '#00bfff', label: '8–14 días',         glow: 'rgba(0,191,255,0.4)' },
-    { maxDias: Infinity, color: '#6495ed', label: '+14 días',    glow: 'rgba(100,149,237,0.35)' },
-  ];
-
-  function getConfig(dias) {
-    return RANGOS.find(r => dias <= r.maxDias) || RANGOS[RANGOS.length - 1];
-  }
-
-  function diasDesde(isoStr) {
-    if (!isoStr) return 9999;
-    const diff = Date.now() - new Date(isoStr).getTime();
-    return diff / (1000 * 60 * 60 * 24);
-  }
-
-  // ── Inicializar mapa ─────────────────────────────────────────
-  // Centro inicial: Chile sur (ajusta según tu zona)
-  const map = L.map('map', { zoomControl: true }).setView([-33.4, -70.6], 6);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    maxZoom: 19
-  }).addTo(map);
-
-  // Capa oscura alternativa (mejor contraste)
-  const darkTile = L.tileLayer(
-    'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    { attribution: '© OpenStreetMap © CARTO', maxZoom: 19 }
-  ).addTo(map);
-
-  let heatLayer   = null;
-  let markerGroup = L.layerGroup().addTo(map);
-
-  // ── Cargar y renderizar datos ────────────────────────────────
-  async function loadData() {
-    const btn = document.getElementById('btn-refresh');
-    const loading = document.getElementById('loading');
-
-    btn.disabled = true;
-    btn.textContent = '⏳ Cargando…';
-    loading.classList.remove('hidden');
-    loading.style.opacity = '1';
-    document.getElementById('error-bar').style.display = 'none';
-
-    try {
-      const resp = await fetch(APPS_SCRIPT_URL + '?t=' + Date.now());
-      if (!resp.ok) throw new Error('Error HTTP ' + resp.status);
-      const visitas = await resp.json();
-
-      if (!Array.isArray(visitas)) throw new Error('Formato inesperado de datos');
-
-      renderMap(visitas);
-
-    } catch (err) {
-      showError('No se pudo cargar: ' + err.message + '. Verifica la URL del script.');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '↻ Actualizar';
-      loading.style.opacity = '0'; loading.style.display = 'none';
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwv0yZmaUE8KC8QJ3ZpAXe68EdXTDJFez87ARSb9VSZTOvaDwHUsfFc-xQDr7wNXT5K/exec';
+    const RANGOS = [
+      { maxDias:  1, color: '#ff4444', label: 'Hoy / Ayer' },
+      { maxDias:  3, color: '#ff8c00', label: '2-3 dias' },
+      { maxDias:  7, color: '#ffd700', label: '4-7 dias' },
+      { maxDias: 14, color: '#00bfff', label: '8-14 dias' },
+      { maxDias: Infinity, color: '#6495ed', label: '+14 dias' },
+    ];
+    function getConfig(d) { return RANGOS.find(r => d <= r.maxDias) || RANGOS[4]; }
+    function diasDesde(s) {
+      if (!s) return 9999;
+      const d = new Date(s);
+      return isNaN(d) ? 9999 : (Date.now() - d) / 86400000;
     }
-  }
-
-  function renderMap(visitas) {
-    // Limpiar capas anteriores
-    markerGroup.clearLayers();
-    if (heatLayer) { map.removeLayer(heatLayer); heatLayer = null; }
-
-    if (visitas.length === 0) {
-      showError('No hay visitas registradas aún.');
-      return;
+    const map = L.map('map').setView([-33.4, -70.6], 6);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '© CARTO', maxZoom: 19 }).addTo(map);
+    let heatLayer = null;
+    let markers = L.layerGroup().addTo(map);
+    function escH(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    async function loadData() {
+      const btn = document.getElementById('btn-refresh');
+      const ld = document.getElementById('loading');
+      btn.disabled = true; btn.textContent = 'Cargando...';
+      ld.style.display = 'flex';
+      document.getElementById('error-bar').style.display = 'none';
+      try {
+        const r = await fetch(APPS_SCRIPT_URL + '?t=' + Date.now());
+        const data = await r.json();
+        if (!Array.isArray(data)) throw new Error('datos invalidos');
+        markers.clearLayers();
+        if (heatLayer) { map.removeLayer(heatLayer); heatLayer = null; }
+        const hp = [], bounds = [], lugares = new Set();
+        data.forEach(v => {
+          const lat = +v.lat, lng = +v.lng;
+          if (!lat || !lng || isNaN(lat)) return;
+          const dias = diasDesde(v.timestamp), cfg = getConfig(dias), df = Math.floor(dias);
+          lugares.add((v.proyecto||'').toLowerCase());
+          bounds.push([lat,lng]);
+          const c = L.circleMarker([lat,lng], { radius:10, color:cfg.color, weight:2, fillColor:cfg.color, fillOpacity:.82 });
+          c.bindPopup('<div class="popup-title">'+escH(v.proyecto||'Sin nombre')+'</div><div>👤 '+escH(v.vendedor||'')+'</div><div>Hace '+df+' dia(s)</div><div><span class="popup-badge" style="background:'+cfg.color+'33;color:'+cfg.color+'">'+cfg.label+'</span></div>', {maxWidth:220});
+          markers.addLayer(c);
+          hp.push([lat, lng, Math.max(0.1, 1-(dias/20))]);
+        });
+        if (hp.length) { heatLayer = L.heatLayer(hp, {radius:40,blur:30,gradient:{0:'#6495ed',.3:'#00bfff',.5:'#ffd700',.7:'#ff8c00',1:'#ff4444'}}).addTo(map); }
+        if (bounds.length) map.fitBounds(bounds, {padding:[40,40], maxZoom:14});
+        document.getElementById('stat-total').textContent = data.length;
+        document.getElementById('stat-lugares').textContent = lugares.size;
+      } catch(e) {
+        const eb = document.getElementById('error-bar');
+        eb.style.display = 'block'; eb.textContent = 'Error: ' + e.message;
+      } finally {
+        btn.disabled = false; btn.textContent = 'Actualizar';
+        document.getElementById('loading').style.display = 'none';
+      }
     }
-
-    const heatPoints = [];
-    const bounds = [];
-    const lugaresUnicos = new Set();
-
-    visitas.forEach(v => {
-      const lat = parseFloat(v.lat);
-      const lng = parseFloat(v.lng);
-      if (isNaN(lat) || isNaN(lng) || lat === 0) return;
-
-      const dias   = diasDesde(v.timestamp);
-      const cfg    = getConfig(dias);
-      const diasF  = Math.floor(dias);
-
-      lugaresUnicos.add(v.proyecto?.toLowerCase().trim() || '?');
-      bounds.push([lat, lng]);
-
-      // ── Marcador circular ──
-      const circle = L.circleMarker([lat, lng], {
-        radius      : 10,
-        color       : cfg.color,
-        weight      : 2,
-        fillColor   : cfg.color,
-        fillOpacity : 0.82,
-      });
-
-      const fechaLeg = v.fecha || diasF + ' día(s) atrás';
-      const badgeBg  = cfg.color + '33';
-
-      circle.bindPopup(`
-        <div class="popup-title">📌 ${escHtml(v.proyecto || 'Sin nombre')}</div>
-        <div>👤 ${escHtml(v.vendedor || '—')}</div>
-        <div>📅 ${fechaLeg} · ${escHtml(v.hora || '')}</div>
-        <div>🗓 Hace <strong>${diasF}</strong> día(s)</div>
-        <div><span class="popup-badge" style="background:${badgeBg};color:${cfg.color}">
-          ${cfg.label}
-        </span></div>
-      `, { maxWidth: 220 });
-
-      markerGroup.addLayer(circle);
-
-      // ── Punto de calor (intensidad inversa al tiempo) ──
-      const intensidad = Math.max(0.1, 1 - (dias / 20));
-      heatPoints.push([lat, lng, intensidad]);
-    });
-
-    // ── Capa de calor ──
-    if (heatPoints.length > 0) {
-      heatLayer = L.heatLayer(heatPoints, {
-        radius  : 40,
-        blur    : 30,
-        maxZoom : 17,
-        gradient: {
-          0.0: '#6495ed',
-          0.3: '#00bfff',
-          0.5: '#ffd700',
-          0.7: '#ff8c00',
-          1.0: '#ff4444'
-        }
-      }).addTo(map);
-    }
-
-    // ── Ajustar vista ──
-    if (bounds.length > 0) {
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
-    }
-
-    // ── Estadísticas ──
-    document.getElementById('stat-total').textContent  = visitas.length;
-    document.getElementById('stat-lugares').textContent = lugaresUnicos.size;
-  }
-
-  function showError(msg) {
-    const bar = document.getElementById('error-bar');
-    bar.textContent = '⚠ ' + msg;
-    bar.style.display = 'block';
-  }
-
-  function escHtml(str) {
-    return String(str)
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  // ── Carga inicial ─────────────────────────────────────────────
-  loadData();
-
-  // ── Auto-refresh cada 5 minutos ───────────────────────────────
-  setInterval(loadData, 5 * 60 * 1000);
+    loadData();
+    setInterval(loadData, 300000);
   </script>
 </body>
 </html>
