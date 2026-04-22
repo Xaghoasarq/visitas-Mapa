@@ -46,10 +46,10 @@
   <div id="legend">
     <h3>Días desde visita</h3>
     <div class="leg-row"><div class="leg-dot" style="background:#ff4444"></div><span>Hoy / Ayer</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#ff8c00"></div><span>2 – 3 días</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#ffd700"></div><span>4 – 7 días</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#00bfff"></div><span>8 – 14 días</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#6495ed"></div><span>Más de 14 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#ff8c00"></div><span>2 – 7 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#ffd700"></div><span>8 – 14 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#00bfff"></div><span>15 – 30 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#6495ed"></div><span>Más de 30 días</span></div>
   </div>
   <div id="loading">
     <div class="spinner"></div>
@@ -60,11 +60,11 @@
   <script>
     const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwv0yZmaUE8KC8QJ3ZpAXe68EdXTDJFez87ARSb9VSZTOvaDwHUsfFc-xQDr7wNXT5K/exec';
     const RANGOS = [
-      { maxDias:  1, color: '#ff4444', label: 'Hoy / Ayer' },
-      { maxDias:  3, color: '#ff8c00', label: '2-3 dias' },
-      { maxDias:  7, color: '#ffd700', label: '4-7 dias' },
-      { maxDias: 14, color: '#00bfff', label: '8-14 dias' },
-      { maxDias: Infinity, color: '#6495ed', label: '+14 dias' },
+      { maxDias:  1, color: '#2ECC71', label: 'Hoy / Ayer' },
+      { maxDias:  3, color: '#3498DB', label: '2-7 dias' },
+      { maxDias:  7, color: '#F1C40F', label: '8-14 dias' },
+      { maxDias: 14, color: '#E67E22', label: '15-30 dias' },
+      { maxDias: Infinity, color: '#E74C3C', label: '+30 dias' },
     ];
     function getConfig(d) { return RANGOS.find(r => d <= r.maxDias) || RANGOS[4]; }
     function diasDesde(s) {
