@@ -45,11 +45,11 @@
   <div id="map"></div>
   <div id="legend">
     <h3>Días desde visita</h3>
-    <div class="leg-row"><div class="leg-dot" style="background:#ff4444"></div><span>Hoy / Ayer</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#ff8c00"></div><span>2 – 7 días</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#ffd700"></div><span>8 – 14 días</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#00bfff"></div><span>15 – 30 días</span></div>
-    <div class="leg-row"><div class="leg-dot" style="background:#6495ed"></div><span>Más de 30 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#2ECC71"></div><span>Hoy / Ayer</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#3498DB"></div><span>2 – 7 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#F1C40F"></div><span>8 – 14 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#E67E22"></div><span>15 – 30 días</span></div>
+    <div class="leg-row"><div class="leg-dot" style="background:#E74C3C"></div><span>Más de 30 días</span></div>
   </div>
   <div id="loading">
     <div class="spinner"></div>
@@ -73,7 +73,7 @@
       return isNaN(d) ? 9999 : (Date.now() - d) / 86400000;
     }
     const map = L.map('map').setView([-33.4, -70.6], 6);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '© CARTO', maxZoom: 19 }).addTo(map);
+   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {attribution: '© CARTO', maxZoom: 19 }).addTo(map);
     let heatLayer = null;
     let markers = L.layerGroup().addTo(map);
     function escH(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
